@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bal Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g8:#1B4D19;--g7:#2D6B2A;--g6:#3d8b39;--g1:#EAF4E8;
+  --am:#E8943A;--aml:#FEF6EC;--amd:#b86d1f;
+  --re:#d94040;--rel:#fef0f0;
+  --pu:#7c4daa;--pul:#f5eeff;
+  --bl:#2563eb;--bll:#eff6ff;
+  --wh:#fff;--g50:#f8f8f6;--g100:#f0efeb;--g200:#e0dfd9;
+  --g300:#c8c7bf;--g400:#a09f97;--g500:#706f67;--g700:#3a3930;--g900:#1a1916;
+  --sh:0 1px 3px rgba(0,0,0,.06);--shl:0 10px 30px rgba(0,0,0,.1);
+  --r:12px;--rs:8px;--sw:232px;
+  --fd:'Lora',Georgia,serif;--fb:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--fb);background:var(--g50);color:var(--g900);min-height:100vh;display:flex;font-size:15px;line-height:1.5;}
+
+/* ── Sidebar ── */
+#sb{width:var(--sw);min-height:100vh;background:var(--g8);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .28s;overflow-y:auto;}
+.sl{padding:1.25rem 1.15rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sli{width:36px;height:36px;background:var(--am);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sln{font-family:var(--fd);color:#fff;font-size:17px;font-weight:600;}
+.sls{color:rgba(255,255,255,.42);font-size:11px;margin-top:1px;}
+.snav{padding:.65rem .55rem;flex:1;}
+.slbl{font-size:10px;font-weight:600;letter-spacing:.09em;color:rgba(255,255,255,.28);text-transform:uppercase;padding:.5rem .45rem .18rem;margin-top:.3rem;}
+.ni{display:flex;align-items:center;gap:9px;padding:10px 10px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.68);font-size:13.5px;transition:all .15s;user-select:none;margin-bottom:2px;}
+.ni .ico{font-size:16px;line-height:1;flex-shrink:0;}
+.nis{font-size:11px;color:rgba(255,255,255,.35);margin-top:1px;}
+.ni:hover{background:rgba(255,255,255,.08);color:#fff;}
+.ni.active{background:rgba(255,255,255,.16);color:#fff;font-weight:500;}
+.sft{padding:.8rem 1.15rem;border-top:1px solid rgba(255,255,255,.1);font-size:11px;color:rgba(255,255,255,.26);flex-shrink:0;}
+
+/* ── Main ── */
+#main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column;}
+.tb{background:var(--wh);border-bottom:1px solid var(--g200);padding:.82rem 1.65rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;gap:10px;}
+.tbt{font-family:var(--fd);font-size:21px;font-weight:600;color:var(--g8);}
+.tbs{font-size:12px;color:var(--g400);margin-top:1px;}
+.tbr{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.hbg{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--g700);}
+.pc{padding:1.4rem 1.65rem;flex:1;max-width:960px;}
+
+/* ── Cards ── */
+.card{background:var(--wh);border:1px solid var(--g200);border-radius:var(--r);padding:1.15rem 1.4rem;margin-bottom:.85rem;box-shadow:var(--sh);}
+.ct{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:.8rem;}
+.ch{font-size:16px;font-weight:600;color:var(--g700);margin-bottom:.3rem;}
+.cd{font-size:13.5px;color:var(--g500);margin-bottom:.9rem;line-height:1.65;}
+
+/* ── Metrics ── */
+.mr{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin-bottom:.85rem;}
+.mc{background:var(--wh);border:1px solid var(--g200);border-radius:var(--r);padding:.9rem 1.05rem;box-shadow:var(--sh);}
+.mcl{font-size:12px;color:var(--g400);font-weight:500;margin-bottom:4px;}
+.mcv{font-size:24px;font-weight:600;color:var(--g900);line-height:1.1;}
+.mcv.g{color:var(--g7);} .mcv.a{color:var(--amd);} .mcv.r{color:var(--re);} .mcv.p{color:var(--pu);}
+.mcs{font-size:11px;color:var(--g400);margin-top:4px;}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--g200);background:var(--wh);color:var(--g700);transition:all .15s;font-family:var(--fb);}
+.btn:hover{background:var(--g100);border-color:var(--g300);}
+.btn:active{transform:scale(.98);}
+.bp{background:var(--g8);color:#fff;border-color:var(--g8);}
+.bp:hover{background:var(--g7);}
+.ba{background:var(--am);color:#fff;border-color:var(--am);}
+.ba:hover{background:var(--amd);}
+.bd{background:var(--rel);color:var(--re);border-color:#f5c5c5;}
+.bd:hover{background:#f8d5d5;}
+.be{background:var(--bll);color:var(--bl);border-color:#c3d9ff;}
+.be:hover{background:#dbeafe;}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px;}
+.btn-lg{padding:12px 22px;font-size:15px;font-weight:600;}
+.btn-bl{width:100%;justify-content:center;}
+
+/* ── Forms ── */
+label{font-size:12px;font-weight:600;color:var(--g500);display:block;margin-bottom:5px;}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:10px 12px;border:1px solid var(--g200);border-radius:var(--rs);font-size:14px;font-family:var(--fb);color:var(--g900);background:var(--wh);transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--g6);box-shadow:0 0 0 3px rgba(45,107,42,.1);}
+input[type=number]{text-align:center;}
+.ia{display:flex;align-items:stretch;border:1px solid var(--g200);border-radius:var(--rs);overflow:hidden;background:var(--wh);}
+.ia:focus-within{border-color:var(--g6);box-shadow:0 0 0 3px rgba(45,107,42,.1);}
+.iap{padding:10px 10px;background:var(--g100);color:var(--g500);font-size:13px;display:flex;align-items:center;border-right:1px solid var(--g200);white-space:nowrap;font-weight:500;}
+.ia input{border:none;box-shadow:none;border-radius:0;}
+.ia input:focus{box-shadow:none;}
+.fg{margin-bottom:.9rem;}
+.frow{display:grid;gap:12px;}
+
+/* ── Egg Grid ── */
+.egg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.egg-cell{display:flex;flex-direction:column;gap:5px;}
+.ebg{text-align:center;font-size:11px;font-weight:700;padding:4px 5px;border-radius:999px;}
+.eb-s{background:var(--g1);color:var(--g8);}
+.eb-m{background:var(--aml);color:var(--amd);}
+.eb-l{background:#fff0e8;color:#c25e1a;}
+.eb-j{background:var(--pul);color:var(--pu);}
+.eb-b{background:var(--rel);color:var(--re);}
+.egg-cell input{font-size:22px;font-weight:600;text-align:center;padding:12px 4px;}
+.epr{display:flex;align-items:center;gap:3px;margin-top:2px;}
+.epr span{font-size:11px;color:var(--g400);}
+.epr input{font-size:12px;padding:3px 5px;text-align:left;width:55px;border-radius:5px;}
+
+/* ── Laying Rate Block ── */
+.lay-block{margin-top:.85rem;padding:1rem 1.1rem;border-radius:var(--r);border:1px solid var(--g200);background:var(--g50);}
+.lay-block.good{border-color:#b6ddb4;background:var(--g1);}
+.lay-block.ok{border-color:#f5d6a8;background:var(--aml);}
+.lay-block.low{border-color:#f5c5c5;background:var(--rel);}
+.lay-num{font-size:28px;font-weight:700;line-height:1;}
+.lay-num.good{color:var(--g7);} .lay-num.ok{color:var(--amd);} .lay-num.low{color:var(--re);}
+.lay-desc{font-size:14px;color:var(--g700);margin-top:.3rem;line-height:1.6;}
+.lay-bar{height:10px;background:rgba(0,0,0,.08);border-radius:999px;overflow:hidden;margin-top:.75rem;}
+.lay-bar-fill{height:100%;border-radius:999px;transition:width .5s;}
+.lay-bar-fill.good{background:var(--g7);} .lay-bar-fill.ok{background:var(--am);} .lay-bar-fill.low{background:var(--re);}
+
+/* ── Category Pills ── */
+.cpills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.85rem;}
+.cpill{padding:7px 14px;border-radius:999px;font-size:13px;font-weight:500;border:1.5px solid var(--g200);background:var(--wh);color:var(--g500);cursor:pointer;transition:all .15s;}
+.cpill:hover{border-color:var(--am);color:var(--amd);}
+.cpill.active{background:var(--am);color:#fff;border-color:var(--am);}
+
+/* ── Quick Items ── */
+.qi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px;margin-bottom:.9rem;}
+.qi-card{border:1.5px solid var(--g200);border-radius:var(--rs);padding:10px 12px;cursor:pointer;transition:all .15s;background:var(--wh);position:relative;}
+.qi-card:hover{border-color:var(--am);background:var(--aml);}
+.qi-name{font-size:13px;font-weight:600;color:var(--g700);}
+.qi-meta{font-size:11px;color:var(--g400);margin-top:2px;}
+.qi-del{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--rel);color:var(--re);border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;}
+.qi-card:hover .qi-del{opacity:1;}
+
+/* ── Data Table ── */
+.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt th{text-align:left;padding:8px 9px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--g400);border-bottom:1px solid var(--g200);}
+.dt td{padding:10px 9px;border-bottom:1px solid var(--g100);color:var(--g700);}
+.dt tr:last-child td{border-bottom:none;}
+.dt .tr-tot td{background:var(--g50);font-weight:600;color:var(--g900);}
+.ic{color:var(--g7);font-weight:600;}
+.ec{color:var(--re);font-weight:600;}
+
+/* ── Simple progress bar ── */
+.pw{margin-top:.7rem;}
+.pl{display:flex;justify-content:space-between;font-size:12px;color:var(--g500);margin-bottom:5px;}
+.pt{height:9px;background:var(--g100);border-radius:999px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,var(--g7),var(--g6));border-radius:999px;transition:width .5s;}
+.pf.a{background:linear-gradient(90deg,var(--amd),var(--am));}
+.pf.r{background:var(--re);}
+
+/* ── Filter pills ── */
+.frow2{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:.95rem;}
+.fp{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--g200);background:var(--wh);color:var(--g500);cursor:pointer;transition:all .15s;}
+.fp:hover{border-color:var(--g7);color:var(--g7);}
+.fp.active{background:var(--g8);color:#fff;border-color:var(--g8);}
+.dr{display:flex;align-items:center;gap:6px;}
+.dr input[type=date]{width:132px;padding:6px 9px;font-size:12px;}
+
+/* ── List Items ── */
+.li{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--g100);}
+.li:last-child{border-bottom:none;}
+.li-l{flex:1;min-width:0;}
+.li-date{font-size:13px;font-weight:600;color:var(--g700);}
+.li-pills{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--g100);color:var(--g500);font-weight:500;}
+.pill.g{background:var(--g1);color:var(--g7);}
+.pill.a{background:var(--aml);color:var(--amd);}
+.pill.o{background:#fff0e8;color:#c25e1a;}
+.pill.p{background:var(--pul);color:var(--pu);}
+.pill.r{background:var(--rel);color:var(--re);}
+.pill.b{background:var(--bll);color:var(--bl);}
+.li-r{text-align:right;flex-shrink:0;}
+.li-main{font-size:14px;font-weight:600;color:var(--g7);}
+.li-sub{font-size:11px;color:var(--g400);margin-top:1px;}
+.li-acts{display:flex;gap:5px;margin-top:7px;justify-content:flex-end;}
+
+/* ── Bar chart ── */
+.bc{display:flex;align-items:flex-end;gap:5px;}
+.bcc{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;}
+.bcf{width:100%;background:var(--g7);border-radius:3px 3px 0 0;min-height:2px;transition:height .4s;}
+.bcf.a{background:var(--am);} .bcf.r{background:var(--re);}
+.bcl{font-size:9px;color:var(--g400);overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center;}
+.bcv{font-size:10px;color:var(--g500);font-weight:500;}
+
+/* ── Payroll ── */
+.wr{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--g100);}
+.wr:last-child{border-bottom:none;}
+.wav{width:36px;height:36px;border-radius:50%;background:var(--g1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g8);flex-shrink:0;}
+.wn{font-size:14px;font-weight:600;color:var(--g700);}
+.ws{font-size:11px;color:var(--g400);}
+.atbs{display:flex;gap:4px;}
+.att{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;border:1.5px solid var(--g200);background:var(--wh);cursor:pointer;transition:all .14s;font-family:var(--fb);}
+.att.full.on{background:var(--g1);border-color:var(--g7);color:var(--g7);}
+.att.half.on{background:var(--aml);border-color:var(--am);color:var(--amd);}
+.att.off.on{background:var(--rel);border-color:var(--re);color:var(--re);}
+.att:hover{background:var(--g100);}
+.wpay{font-size:13px;font-weight:600;color:var(--g7);min-width:60px;text-align:right;}
+
+/* ── Success banner after save ── */
+.save-banner{background:var(--g1);border:1.5px solid var(--g6);border-radius:var(--r);padding:1.2rem 1.5rem;text-align:center;margin-bottom:.85rem;}
+.save-banner .big{font-size:28px;margin-bottom:6px;}
+.save-banner .msg{font-size:16px;font-weight:600;color:var(--g7);margin-bottom:4px;}
+.save-banner .sub{font-size:13px;color:var(--g6);}
+
+/* ── Print Report ── */
+.print-header{display:none;}
+@media print{
+  #sb,#main .tb,.no-print{display:none!important;}
+  #main{margin-left:0!important;}
+  .pc{padding:.5rem!important;max-width:100%!important;}
+  .print-header{display:block;margin-bottom:1rem;}
+  .print-header h1{font-size:20px;font-weight:700;color:#000;}
+  .print-header p{font-size:12px;color:#555;}
+  .card{box-shadow:none!important;border:1px solid #ddd!important;break-inside:avoid;margin-bottom:.6rem!important;}
+  .bcf{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{background:#fff;}
+  .lay-bar-fill{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--g8);color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:9999;box-shadow:var(--shl);white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── Empty ── */
+.empty{text-align:center;padding:2.2rem 1rem;color:var(--g400);font-size:13px;}
+.ei{font-size:30px;margin-bottom:8px;}
+
+/* ── Modal ── */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
+.mbg.open{display:flex;}
+.modal{background:var(--wh);border-radius:var(--r);padding:1.5rem;max-width:480px;width:100%;box-shadow:var(--shl);margin:auto;}
+.modal h3{font-size:16px;font-weight:600;color:var(--g700);margin-bottom:1rem;}
+.mact{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;}
+
+/* ── Info box ── */
+.info{border-radius:var(--rs);padding:.7rem 1rem;font-size:13px;margin-top:.6rem;line-height:1.55;}
+.info.g{background:var(--g1);color:var(--g7);}
+.info.a{background:var(--aml);color:var(--amd);}
+
+/* ── Divider ── */
+.div{height:1px;background:var(--g100);margin:.75rem 0;}
+
+/* ── Overlay / Mobile ── */
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90;}
+#ov.show{display:block;}
+
+@media(max-width:768px){
+  :root{--sw:0px;}
+  #sb{transform:translateX(-232px);width:232px;}
+  #sb.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  .hbg{display:flex;}
+  #ov.show{display:block;}
+  .pc{padding:1rem;}
+  .egg-grid{grid-template-columns:repeat(3,1fr);}
+  .tb{padding:.78rem .95rem;}
+}
+</style>
+</head>
+<body>
+<div id="ov" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sb">
+  <div class="sl"><div class="sli">🥚</div><div><div class="sln">Bal Farm</div><div class="sls">Farm Tracker</div></div></div>
+  <div class="snav">
+    <div class="ni active" onclick="nav('dash')"    id="nav-dash">   <span class="ico">🏠</span><div><div>Home</div><div class="nis">Daily summary</div></div></div>
+    <div class="ni"        onclick="nav('harvest')" id="nav-harvest"><span class="ico">🥚</span><div><div>Egg Harvest</div><div class="nis">Record today's eggs</div></div></div>
+    <div class="ni"        onclick="nav('history')" id="nav-history"><span class="ico">📅</span><div><div>Past Records</div><div class="nis">View, edit & delete</div></div></div>
+    <div class="ni"        onclick="nav('exp')"     id="nav-exp">    <span class="ico">🛒</span><div><div>Expenses</div><div class="nis">What you spent</div></div></div>
+    <div class="ni"        onclick="nav('payroll')" id="nav-payroll"><span class="ico">👷</span><div><div>Workers & Pay</div><div class="nis">Attendance & wages</div></div></div>
+    <div class="ni"        onclick="nav('reports')" id="nav-reports"><span class="ico">📊</span><div><div>Reports</div><div class="nis">Print & download</div></div></div>
+    <div class="slbl">Settings</div>
+    <div class="ni" onclick="nav('chickens')" id="nav-chickens"><span class="ico">🐔</span><div><div>My Chickens</div><div class="nis">Total chicken count</div></div></div>
+    <div class="ni" onclick="nav('workers')"  id="nav-workers"> <span class="ico">👥</span><div><div>Manage Workers</div><div class="nis">Add or remove staff</div></div></div>
+  </div>
+  <div class="sft">Bal Farm v4.0</div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="tb">
+    <button class="hbg" onclick="toggleSB()"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div style="flex:1"><div class="tbt" id="tbt">Home</div><div class="tbs" id="tbs"></div></div>
+    <div class="tbr" id="tbr"></div>
+  </div>
+  <div class="pc" id="pc"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- EDIT HARVEST MODAL -->
+<div class="mbg" id="edit-modal">
+  <div class="modal">
+    <h3>✏️ Edit Harvest Record</h3>
+    <input type="hidden" id="em-date">
+    <div style="background:var(--g1);border-radius:var(--rs);padding:.6rem .9rem;font-size:14px;font-weight:600;color:var(--g7);margin-bottom:1rem;" id="em-lbl"></div>
+    <div class="egg-grid" style="margin-bottom:1rem;">
+      <div class="egg-cell"><span class="ebg eb-s">Small</span><input type="number" id="em-small"  min="0" value="0"><div class="epr"><span>₱</span><input type="number" id="emp-small"  min="0" step="0.01" style="width:50px"><span>/egg</span></div></div>
+      <div class="egg-cell"><span class="ebg eb-m">Medium</span><input type="number" id="em-medium" min="0" value="0"><div class="epr"><span>₱</span><input type="number" id="emp-medium" min="0" step="0.01" style="width:50px"><span>/egg</span></div></div>
+      <div class="egg-cell"><span class="ebg eb-l">Large</span><input type="number" id="em-large"  min="0" value="0"><div class="epr"><span>₱</span><input type="number" id="emp-large"  min="0" step="0.01" style="width:50px"><span>/egg</span></div></div>
+      <div class="egg-cell"><span class="ebg eb-j">Jumbo</span><input type="number" id="em-jumbo"  min="0" value="0"><div class="epr"><span>₱</span><input type="number" id="emp-jumbo"  min="0" step="0.01" style="width:50px"><span>/egg</span></div></div>
+      <div class="egg-cell"><span class="ebg eb-b">🩹 Broken</span><input type="number" id="em-broken" min="0" value="0"><div style="font-size:11px;color:var(--g400);text-align:center;margin-top:3px;">no income</div></div>
+    </div>
+    <div class="mact"><button class="btn" onclick="closeEditModal()">Cancel</button><button class="btn bp" onclick="saveEditModal()">✅ Save Changes</button></div>
+  </div>
+</div>
+
+<!-- ADD WORKER MODAL -->
+<div class="mbg" id="wmodal">
+  <div class="modal">
+    <h3>➕ Add New Worker</h3>
+    <div class="fg"><label>Worker's Full Name</label><input type="text" id="mw-name" placeholder="e.g. Juan dela Cruz"></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr;margin-bottom:.9rem">
+      <div><label>Daily Wage (₱)</label><div class="ia"><span class="iap">₱</span><input type="number" id="mw-wage" min="0" value="500" style="text-align:left"></div></div>
+      <div><label>Role / Job</label><input type="text" id="mw-role" placeholder="e.g. Chicken care"></div>
+    </div>
+    <div class="mact"><button class="btn" onclick="closeWModal()">Cancel</button><button class="btn bp" onclick="saveNewWorker()">Save Worker</button></div>
+  </div>
+</div>
+
+<!-- QUICK ITEM MODAL -->
+<div class="mbg" id="qimodal">
+  <div class="modal">
+    <h3>⭐ Save as Quick Item</h3>
+    <div class="cd">Save this expense so you can add it again next time with one tap.</div>
+    <div class="fg"><label>Name</label><input type="text" id="qi-name" placeholder="e.g. Chicken Feed 50kg"></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr;margin-bottom:.9rem">
+      <div><label>Category</label><select id="qi-cat"><option>Feed</option><option>Medicine</option><option>Equipment</option><option>Utilities</option><option>Other</option></select></div>
+      <div><label>Usual Amount (₱)</label><div class="ia"><span class="iap">₱</span><input type="number" id="qi-amount" min="0" step="0.01" style="text-align:left"></div></div>
+    </div>
+    <div class="mact"><button class="btn" onclick="closeQIModal()">Cancel</button><button class="btn bp" onclick="saveQI()">⭐ Save</button></div>
+  </div>
+</div>
+
+<script>
+// ── Storage ────────────────────────────────
+const K={logs:'bfL',prices:'bfP',flock:'bfF',exp:'bfE',workers:'bfW',payroll:'bfPR',qitems:'bfQI'};
+const SIZES=['small','medium','large','jumbo'];
+const SL={small:'Small',medium:'Medium',large:'Large',jumbo:'Jumbo'};
+const SC={small:'#2D6B2A',medium:'#b86d1f',large:'#c25e1a',jumbo:'#7c4daa'};
+const DP={small:5,medium:6,large:7,jumbo:8};
+const ECATS=['Feed','Medicine','Equipment','Utilities','Other'];
+const EICO={Feed:'🌾',Medicine:'💊',Equipment:'🔧',Utilities:'💡',Other:'📦'};
+const ECOL={Feed:'g',Medicine:'a',Equipment:'b',Utilities:'p',Other:''};
+const PCOLS=['g','a','o','p'];
+
+function jg(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function js(k,v){localStorage.setItem(k,JSON.stringify(v));}
+const getLogs=()=>jg(K.logs,[]);
+const getPrices=()=>Object.assign({},DP,jg(K.prices,{}));
+const getFlock=()=>parseInt(localStorage.getItem(K.flock)||'0');
+const getExp=()=>jg(K.exp,[]);
+const getWorkers=()=>jg(K.workers,[]);
+const getPR=()=>jg(K.payroll,{});
+const getQI=()=>jg(K.qitems,[]);
+
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
+function p2(n){return String(n).padStart(2,'0');}
+function fd(s){return new Date(s+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});}
+function fds(s){return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function fm(v){return '₱'+Number(v).toFixed(2);}
+function ini(n){return n.trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+
+function calcE(e){
+  const p=getPrices();let eggs=0,income=0;const bz={};
+  SIZES.forEach(s=>{const c=e[s]||0;const i=c*(p[s]||0);bz[s]={count:c,income:i};eggs+=c;income+=i;});
+  return{bz,eggs,income,broken:e.broken||0};
+}
+function layRate(eggs){const f=getFlock();return f>0?Math.min(100,(eggs/f)*100):null;}
+function rateClass(r){return r>=70?'good':r>=40?'ok':'low';}
+function rateWord(r){return r>=70?'Good':'Okay';}
+
+// ── Laying Rate Block ─────────────────────
+// Clean, simple explanation — no gimmicks
+function layingBlock(eggs, flock){
+  if(!flock||eggs===0) return '';
+  const rate=Math.min(100,(eggs/flock)*100);
+  const notLaying=Math.max(0,flock-eggs);
+  const cls=rateClass(rate);
+  const note=cls==='good'
+    ?'Most of your chickens are laying well.'
+    :cls==='ok'
+    ?'About half are laying. Some chickens rest on certain days — this is normal.'
+    :'Only a small number laid eggs. Check that your chickens have enough food, water, and are in good health.';
+  return`<div class="lay-block ${cls}">
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+      <span class="lay-num ${cls}">${rate.toFixed(1)}%</span>
+      <span style="font-size:14px;color:var(--g700)">${eggs} out of ${flock} chickens laid eggs today — ${notLaying} did not.</span>
+    </div>
+    <div class="lay-bar"><div class="lay-bar-fill ${cls}" style="width:${Math.max(2,rate)}%"></div></div>
+    <div style="font-size:13px;color:var(--g500);margin-top:.5rem">${note}</div>
+  </div>`;
+}
+
+// ── Toast ──────────────────────────────────
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2500);}
+
+// ── Nav ────────────────────────────────────
+function nav(pg){
+  document.querySelectorAll('.ni').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav-'+pg)?.classList.add('active');
+  document.getElementById('tbr').innerHTML='';
+  closeSB();
+  ({dash:renderDash,harvest:renderHarvest,history:renderHistory,exp:renderExp,payroll:renderPayroll,reports:renderReports,chickens:renderChickens,workers:renderWorkers})[pg]?.();
+}
+function toggleSB(){document.getElementById('sb').classList.toggle('open');document.getElementById('ov').classList.toggle('show');}
+function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');}
+function sh(t,s){document.getElementById('tbt').textContent=t;document.getElementById('tbs').textContent=s||'';}
+
+// ─────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────
+function renderDash(){
+  sh('Home',new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}));
+  document.getElementById('tbr').innerHTML=`<button class="btn bp" onclick="nav('harvest')">+ Log Eggs</button>`;
+  const logs=getLogs(),flock=getFlock(),prices=getPrices(),today=todayStr();
+  const tl=logs.find(l=>l.date===today);const c=tl?calcE(tl):null;
+  const eggs=c?c.eggs:0,income=c?c.income:0,broken=c?c.broken:0;
+  const rate=layRate(eggs);
+  const d1=new Date();d1.setDate(d1.getDate()-29);
+  const mExp=getExp().filter(e=>e.date>=d1.toISOString().split('T')[0]).reduce((a,e)=>a+e.amount,0);
+  const days7=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const s=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());const l=logs.find(x=>x.date===s);const cx=l?calcE(l):null;days7.push({s,total:cx?cx.eggs:0,label:fds(s)});}
+  const mx=Math.max(...days7.map(d=>d.total),1);
+  const bars=days7.map(d=>{const h=Math.max(2,Math.round((d.total/mx)*80));return`<div class="bcc"><div class="bcv">${d.total||''}</div><div class="bcf${d.s===today?' a':''}" style="height:${h}px"></div><div class="bcl">${d.label}</div></div>`;}).join('');
+
+  document.getElementById('pc').innerHTML=`
+    <div class="mr">
+      <div class="mc"><div class="mcl">🥚 Eggs Today</div><div class="mcv ${eggs>0?'g':''}">${eggs}</div><div class="mcs">${broken>0?broken+' broken':'not recorded yet'}</div></div>
+      <div class="mc"><div class="mcl">💰 Income Today</div><div class="mcv ${income>0?'g':''}">${fm(income)}</div><div class="mcs">from egg sales</div></div>
+      <div class="mc"><div class="mcl">🐔 Chickens Laying</div><div class="mcv ${rate===null?'':rateClass(rate)==='good'?'g':rateClass(rate)==='ok'?'a':'r'}">${rate!==null?rate.toFixed(1)+'%':'—'}</div><div class="mcs">${flock>0?flock+' chickens total':'set chicken count'}</div></div>
+      <div class="mc"><div class="mcl">🛒 Expenses (30d)</div><div class="mcv a">${fm(mExp)}</div></div>
+    </div>
+    ${eggs>0&&flock>0?layingBlock(eggs,flock):''}
+    <div class="card"><div class="ct">Eggs collected — last 7 days</div><div class="bc" style="height:88px;margin-top:.5rem">${bars}</div></div>
+    ${c&&eggs>0?`<div class="card"><div class="ct">Today's breakdown</div><table class="dt"><thead><tr><th>Size</th><th>Count</th><th>Price</th><th>Income</th></tr></thead><tbody>
+      ${SIZES.filter(s=>c.bz[s].count>0).map(s=>`<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SC[s]};margin-right:6px"></span>${SL[s]}</td><td>${c.bz[s].count}</td><td>${fm(prices[s])}</td><td class="ic">${fm(c.bz[s].income)}</td></tr>`).join('')}
+      ${broken>0?`<tr><td>🩹 Broken</td><td>${broken}</td><td>—</td><td style="color:var(--g400)">₱0.00</td></tr>`:''}
+      <tr class="tr-tot"><td>TOTAL</td><td>${eggs+broken}</td><td></td><td class="ic">${fm(income)}</td></tr>
+    </tbody></table></div>`:`<div class="card"><div class="empty"><div class="ei">🥚</div>No eggs recorded today.<br><button class="btn bp" style="margin-top:12px" onclick="nav('harvest')">Record Today's Eggs</button></div></div>`}
+  `;
+}
+
+// ─────────────────────────────────────────
+// EGG HARVEST  — shows success page after saving
+// ─────────────────────────────────────────
+function renderHarvest(){
+  sh('Egg Harvest','Enter how many eggs you collected today');
+  const today=todayStr(),logs=getLogs(),prices=getPrices(),flock=getFlock();
+  const ex=logs.find(l=>l.date===today);
+
+  // If already saved today, show summary with option to edit or go to past records
+  if(ex){
+    const c=calcE(ex);
+    const rate=layRate(c.eggs);
+    document.getElementById('pc').innerHTML=`
+      <div class="save-banner">
+        <div class="big">✅</div>
+        <div class="msg">Today's eggs are already saved!</div>
+        <div class="sub">${fd(today)}</div>
+      </div>
+      <div class="card">
+        <div class="ct">Today's Saved Record</div>
+        <table class="dt"><thead><tr><th>Egg Size</th><th>Count</th><th>Price</th><th>Income</th></tr></thead><tbody>
+          ${SIZES.filter(s=>ex[s]>0).map(s=>`<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SC[s]};margin-right:6px"></span>${SL[s]}</td><td>${ex[s]}</td><td>${fm(prices[s])}</td><td class="ic">${fm(ex[s]*(prices[s]||0))}</td></tr>`).join('')}
+          ${ex.broken>0?`<tr><td>🩹 Broken</td><td>${ex.broken}</td><td>—</td><td style="color:var(--g400)">₱0.00</td></tr>`:''}
+          <tr class="tr-tot"><td>TOTAL</td><td>${c.eggs+c.broken}</td><td></td><td class="ic">${fm(c.income)}</td></tr>
+        </tbody></table>
+        ${c.eggs>0?layingBlock(c.eggs,flock):''}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn be" onclick="openEditModal('${today}')">✏️ Edit Today's Record</button>
+        <button class="btn" onclick="nav('history')">📅 See All Past Records</button>
+        <button class="btn bp" onclick="forceNewHarvest()">+ Enter New Count</button>
+      </div>
+      <div class="info a" style="margin-top:.75rem">💡 Did you make a mistake? Tap "Edit Today's Record" to fix it, or tap "Enter New Count" to overwrite it.</div>
+    `;
+    return;
+  }
+
+  // Not yet saved today — show input form
+  document.getElementById('pc').innerHTML=`
+    <div class="card">
+      <div class="ch">🥚 Today's Eggs — ${fd(today)}</div>
+      <div class="cd">Type the number of eggs for each size. You can also change the price below each size — it saves automatically.</div>
+      <div class="egg-grid">
+        ${SIZES.map(s=>`<div class="egg-cell">
+          <span class="ebg eb-${s[0]}">${SL[s]}</span>
+          <input type="number" id="ei-${s}" min="0" value="0" oninput="liveCalc()">
+          <div class="epr"><span>₱</span><input type="number" id="ep-${s}" min="0" step="0.01" value="${prices[s]}" oninput="liveCalc()"><span>/egg</span></div>
+        </div>`).join('')}
+        <div class="egg-cell">
+          <span class="ebg eb-b">🩹 Broken</span>
+          <input type="number" id="ei-broken" min="0" value="0" oninput="liveCalc()">
+          <div style="font-size:11px;color:var(--g400);text-align:center;margin-top:4px;">no income</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="live-card" style="display:none">
+      <div class="ct">Live Calculation</div>
+      <table class="dt" id="live-tbl"></table>
+      <div id="live-pct"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:.5rem;">
+      <button class="btn" onclick="clearH()">Clear</button>
+      <button class="btn bp btn-lg" onclick="saveH()">✅ Save Today's Eggs</button>
+    </div>
+    <div class="info a">💡 After saving, you can still edit or change the record by going to <strong>Past Records</strong>.</div>
+  `;
+  liveCalc();
+}
+
+// allow re-entry even if already saved
+function forceNewHarvest(){
+  const today=todayStr(),logs=getLogs(),prices=getPrices();
+  document.getElementById('pc').innerHTML=`
+    <div class="info a" style="margin-bottom:.85rem">✏️ You are entering a new count for today. This will <strong>replace</strong> the previously saved record.</div>
+    <div class="card">
+      <div class="ch">🥚 New Count for ${fd(today)}</div>
+      <div class="egg-grid">
+        ${SIZES.map(s=>`<div class="egg-cell">
+          <span class="ebg eb-${s[0]}">${SL[s]}</span>
+          <input type="number" id="ei-${s}" min="0" value="0" oninput="liveCalc()">
+          <div class="epr"><span>₱</span><input type="number" id="ep-${s}" min="0" step="0.01" value="${prices[s]}" oninput="liveCalc()"><span>/egg</span></div>
+        </div>`).join('')}
+        <div class="egg-cell">
+          <span class="ebg eb-b">🩹 Broken</span>
+          <input type="number" id="ei-broken" min="0" value="0" oninput="liveCalc()">
+          <div style="font-size:11px;color:var(--g400);text-align:center;margin-top:4px;">no income</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="live-card" style="display:none"><div class="ct">Live Calculation</div><table class="dt" id="live-tbl"></table><div id="live-pct"></div></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn" onclick="renderHarvest()">Cancel</button>
+      <button class="btn bp btn-lg" onclick="saveH()">✅ Save</button>
+    </div>
+  `;
+  liveCalc();
+}
+
+function getHI(){const o={};SIZES.forEach(s=>o[s]=parseInt(document.getElementById('ei-'+s)?.value)||0);o.broken=parseInt(document.getElementById('ei-broken')?.value)||0;return o;}
+function getHP(){const o={};SIZES.forEach(s=>o[s]=parseFloat(document.getElementById('ep-'+s)?.value)||0);return o;}
+
+function liveCalc(){
+  const inp=getHI(),p=getHP(),flock=getFlock();
+  const tE=SIZES.reduce((a,s)=>a+inp[s],0),tI=SIZES.reduce((a,s)=>a+inp[s]*p[s],0);
+  const card=document.getElementById('live-card');if(!card)return;
+  if(tE===0&&inp.broken===0){card.style.display='none';return;}
+  card.style.display='block';
+  const rows=SIZES.filter(s=>inp[s]>0).map(s=>`<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SC[s]};margin-right:6px"></span>${SL[s]}</td><td>${inp[s]}</td><td>${fm(p[s])}</td><td class="ic">${fm(inp[s]*p[s])}</td></tr>`).join('');
+  const br=inp.broken>0?`<tr><td>🩹 Broken</td><td>${inp.broken}</td><td>—</td><td style="color:var(--g400)">₱0.00</td></tr>`:'';
+  document.getElementById('live-tbl').innerHTML=`<thead><tr><th>Size</th><th>Count</th><th>Price</th><th>Income</th></tr></thead><tbody>${rows}${br}<tr class="tr-tot"><td>TOTAL</td><td>${tE+inp.broken}</td><td></td><td class="ic">${fm(tI)}</td></tr></tbody>`;
+  const pe=document.getElementById('live-pct');
+  if(flock>0&&tE>0){
+    pe.innerHTML=layingBlock(tE,flock);
+  } else if(flock===0){
+    pe.innerHTML=`<p style="font-size:13px;color:var(--g400);margin-top:8px">Go to "My Chickens" to set your chicken count and see laying rate.</p>`;
+  } else pe.innerHTML='';
+}
+
+function clearH(){SIZES.forEach(s=>{const e=document.getElementById('ei-'+s);if(e)e.value=0;});const b=document.getElementById('ei-broken');if(b)b.value=0;liveCalc();}
+function saveH(){
+  const inp=getHI(),p=getHP();
+  if(SIZES.reduce((a,s)=>a+inp[s],0)+inp.broken===0){toast('Please enter at least one egg count');return;}
+  const logs=getLogs(),today=todayStr(),idx=logs.findIndex(l=>l.date===today);
+  if(idx>=0)logs[idx]={date:today,...inp};else logs.unshift({date:today,...inp});
+  js(K.logs,logs);js(K.prices,p);
+  toast('✅ Eggs saved!');
+  renderHarvest(); // re-render shows the success page
+}
+
+// ─────────────────────────────────────────
+// HISTORY
+// ─────────────────────────────────────────
+let histF='today';
+function renderHistory(){
+  sh('Past Records','View, edit, or delete your harvest records');
+  const today=todayStr();
+  document.getElementById('pc').innerHTML=`
+    <div class="frow2">
+      <span class="fp ${histF==='today'?'active':''}"  onclick="setHF('today',this)">Today</span>
+      <span class="fp ${histF==='week'?'active':''}"   onclick="setHF('week',this)">Last 7 Days</span>
+      <span class="fp ${histF==='month'?'active':''}"  onclick="setHF('month',this)">Last 30 Days</span>
+      <span class="fp ${histF==='all'?'active':''}"    onclick="setHF('all',this)">All Time</span>
+      <span class="fp ${histF==='custom'?'active':''}" onclick="setHF('custom',this)">Custom Dates</span>
+      <div class="dr" id="cr" style="display:${histF==='custom'?'flex':'none'}">
+        <input type="date" id="hf-from" value="${today}" onchange="renderHL()">
+        <span style="font-size:12px;color:var(--g400)">to</span>
+        <input type="date" id="hf-to" value="${today}" onchange="renderHL()">
+      </div>
+    </div>
+    <div id="hw"></div>`;
+  renderHL();
+}
+function setHF(f,el){histF=f;document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));el.classList.add('active');const cr=document.getElementById('cr');if(cr)cr.style.display=f==='custom'?'flex':'none';renderHL();}
+function filtL(){
+  const logs=getLogs(),today=todayStr();
+  if(histF==='today')return logs.filter(l=>l.date===today);
+  if(histF==='week'){const d=new Date();d.setDate(d.getDate()-6);return logs.filter(l=>l.date>=d.toISOString().split('T')[0]&&l.date<=today);}
+  if(histF==='month'){const d=new Date();d.setDate(d.getDate()-29);return logs.filter(l=>l.date>=d.toISOString().split('T')[0]&&l.date<=today);}
+  if(histF==='custom'){const f=document.getElementById('hf-from')?.value,t=document.getElementById('hf-to')?.value;if(!f||!t)return getLogs();return getLogs().filter(l=>l.date>=f&&l.date<=t);}
+  return getLogs();
+}
+function renderHL(){
+  const filt=filtL(),wrap=document.getElementById('hw');if(!wrap)return;
+  const flock=getFlock();
+  if(!filt.length){wrap.innerHTML=`<div class="card"><div class="empty"><div class="ei">📅</div>No records found.</div></div>`;return;}
+  const tE=filt.reduce((a,e)=>a+SIZES.reduce((b,s)=>b+(e[s]||0),0),0);
+  const tI=filt.reduce((a,e)=>a+calcE(e).income,0);
+  const avg=(tE/filt.length).toFixed(1);
+  const tB=filt.reduce((a,e)=>a+(e.broken||0),0);
+  const avgRate=flock>0&&filt.length>0?Math.min(100,(tE/filt.length/flock)*100):null;
+
+  const items=filt.map(e=>{
+    const c=calcE(e);
+    const pills=SIZES.filter(s=>e[s]>0).map(s=>`<span class="pill ${PCOLS[SIZES.indexOf(s)]}">${e[s]} ${SL[s]}</span>`).join('');
+    const bp=e.broken>0?`<span class="pill r">${e.broken} broken</span>`:'';
+    const rate=layRate(c.eggs);
+    const rateHtml=rate!==null?`<div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span class="pill ${rateClass(rate)==='good'?'g':rateClass(rate)==='ok'?'a':'r'}">🐔 ${rate.toFixed(1)}% laying</span>
+      <span style="font-size:11px;color:var(--g400)">${c.eggs} out of ${flock} chickens laid eggs</span>
+    </div>`:'';
+    return`<div class="li">
+      <div class="li-l">
+        <div class="li-date">${fd(e.date)}</div>
+        <div class="li-pills">${pills}${bp}</div>
+        ${rateHtml}
+        <div class="li-acts">
+          <button class="btn btn-sm be" onclick="openEditModal('${e.date}')">✏️ Edit</button>
+          <button class="btn btn-sm bd" onclick="delRecord('${e.date}')">🗑 Delete</button>
+        </div>
+      </div>
+      <div class="li-r">
+        <div class="li-main">${fm(c.income)}</div>
+        <div class="li-sub">${c.eggs} eggs</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML=`
+    <div class="mr">
+      <div class="mc"><div class="mcl">Total Eggs</div><div class="mcv g">${tE}</div><div class="mcs">${filt.length} days recorded</div></div>
+      <div class="mc"><div class="mcl">Total Income</div><div class="mcv g">${fm(tI)}</div></div>
+      <div class="mc"><div class="mcl">Average per Day</div><div class="mcv">${avg}</div><div class="mcs">eggs per day</div></div>
+      ${avgRate!==null?`<div class="mc"><div class="mcl">Avg % Laying</div><div class="mcv ${rateClass(avgRate)==='good'?'g':rateClass(avgRate)==='ok'?'a':'r'}">${avgRate.toFixed(1)}%</div><div class="mcs">of ${flock} chickens</div></div>`:`<div class="mc"><div class="mcl">Broken</div><div class="mcv a">${tB}</div></div>`}
+    </div>
+    <div class="card"><div class="ct">Records (${filt.length}) — tap ✏️ Edit or 🗑 Delete on any record</div>${items}</div>`;
+}
+function openEditModal(date){
+  const logs=getLogs(),e=logs.find(l=>l.date===date);if(!e)return;
+  const p=getPrices();
+  document.getElementById('em-date').value=date;
+  document.getElementById('em-lbl').textContent='Editing: '+fd(date);
+  SIZES.forEach(s=>{document.getElementById('em-'+s).value=e[s]||0;document.getElementById('emp-'+s).value=p[s];});
+  document.getElementById('em-broken').value=e.broken||0;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('open');}
+function saveEditModal(){
+  const date=document.getElementById('em-date').value;
+  const logs=getLogs(),idx=logs.findIndex(l=>l.date===date);
+  const entry={date};SIZES.forEach(s=>entry[s]=parseInt(document.getElementById('em-'+s)?.value)||0);
+  entry.broken=parseInt(document.getElementById('em-broken')?.value)||0;
+  const np={};SIZES.forEach(s=>np[s]=parseFloat(document.getElementById('emp-'+s)?.value)||0);
+  if(idx>=0)logs[idx]=entry;else logs.unshift(entry);
+  js(K.logs,logs);js(K.prices,np);
+  closeEditModal();toast('✅ Record updated!');renderHL();
+}
+function delRecord(date){
+  if(!confirm('Delete the record for '+fd(date)+'?'))return;
+  js(K.logs,getLogs().filter(l=>l.date!==date));toast('Record deleted');renderHL();
+}
+
+// ─────────────────────────────────────────
+// EXPENSES
+// ─────────────────────────────────────────
+let expCat='Feed',expFilter='month';
+function renderExp(){
+  sh('Expenses','Record what you spent on the farm');
+  const today=todayStr();
+  document.getElementById('pc').innerHTML=`
+    <div class="card">
+      <div class="ch">🛒 Add New Expense</div>
+      <div class="cd">Choose what you bought, enter how much you paid, and a short description. Or tap a Quick Item to fill in fast.</div>
+      <div id="qi-sec">${buildQISec()}</div>
+      <div class="div"></div>
+      <div class="fg"><label>What did you buy?</label>
+        <div class="cpills">${ECATS.map(c=>`<span class="cpill ${c===expCat?'active':''}" onclick="setEC('${c}',this)">${EICO[c]} ${c}</span>`).join('')}</div>
+      </div>
+      <div class="frow" style="grid-template-columns:1fr 1fr;margin-bottom:.9rem">
+        <div><label>Date</label><input type="date" id="exp-d" value="${today}"></div>
+        <div><label>Amount (₱) *</label><div class="ia"><span class="iap">₱</span><input type="number" id="exp-a" min="0" step="0.01" placeholder="0.00" style="text-align:left"></div></div>
+      </div>
+      <div class="fg"><label>What exactly did you buy? *</label><input type="text" id="exp-n" placeholder="e.g. 50kg chicken feed, new waterer, vitamin drops"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ba btn-bl btn-lg" style="flex:1" onclick="saveExp()">✅ Save Expense</button>
+        <button class="btn" onclick="openQIModal()">⭐ Save as Quick Item</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:8px">
+        <div class="ct" style="margin:0">Recent Expenses</div>
+        <div id="exp-tot" style="font-size:18px;font-weight:700;color:var(--re)"></div>
+      </div>
+      <div class="frow2">
+        <span class="fp ${expFilter==='today'?'active':''}"  onclick="setExpF('today',this)">Today</span>
+        <span class="fp ${expFilter==='week'?'active':''}"   onclick="setExpF('week',this)">Last 7 Days</span>
+        <span class="fp ${expFilter==='month'?'active':''}"  onclick="setExpF('month',this)">Last 30 Days</span>
+        <span class="fp ${expFilter==='all'?'active':''}"    onclick="setExpF('all',this)">All Time</span>
+        <span class="fp ${expFilter==='custom'?'active':''}" onclick="setExpF('custom',this)">Custom</span>
+        <div class="dr" id="exp-cr" style="display:${expFilter==='custom'?'flex':'none'}">
+          <input type="date" id="exp-from" value="${today}" onchange="renderExpList()">
+          <span style="font-size:12px;color:var(--g400)">to</span>
+          <input type="date" id="exp-to" value="${today}" onchange="renderExpList()">
+        </div>
+      </div>
+      <div id="exp-list"></div>
+    </div>
+  `;
+  renderExpList();
+}
+function buildQISec(){
+  const qi=getQI();
+  if(!qi.length)return`<div style="font-size:12px;color:var(--g400)">No quick items yet. Fill in an expense and tap ⭐ to save it for next time.</div>`;
+  return`<div style="font-size:12px;font-weight:600;color:var(--g500);margin-bottom:7px">⭐ Quick Items — tap to fill in the form</div>
+    <div class="qi-grid">${qi.map(q=>`<div class="qi-card" onclick="fillQI('${q.id}')">
+      <button class="qi-del" onclick="event.stopPropagation();delQI('${q.id}')">✕</button>
+      <div class="qi-name">${q.name}</div>
+      <div class="qi-meta">${EICO[q.cat]} ${q.cat} · ${fm(q.amount)}</div>
+    </div>`).join('')}</div>`;
+}
+function setEC(c,el){expCat=c;document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+function setExpF(f,el){expFilter=f;document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));el.classList.add('active');const cr=document.getElementById('exp-cr');if(cr)cr.style.display=f==='custom'?'flex':'none';renderExpList();}
+function filtExp(){
+  const exp=getExp(),today=todayStr();
+  if(expFilter==='today')return exp.filter(e=>e.date===today);
+  if(expFilter==='week'){const d=new Date();d.setDate(d.getDate()-6);return exp.filter(e=>e.date>=d.toISOString().split('T')[0]&&e.date<=today);}
+  if(expFilter==='month'){const d=new Date();d.setDate(d.getDate()-29);return exp.filter(e=>e.date>=d.toISOString().split('T')[0]&&e.date<=today);}
+  if(expFilter==='custom'){const f=document.getElementById('exp-from')?.value,t=document.getElementById('exp-to')?.value;if(!f||!t)return exp;return exp.filter(e=>e.date>=f&&e.date<=t);}
+  return exp;
+}
+function renderExpList(){
+  const filt=filtExp(),tot=filt.reduce((a,e)=>a+e.amount,0);
+  const badge=document.getElementById('exp-tot');if(badge)badge.textContent=fm(tot);
+  const wrap=document.getElementById('exp-list');if(!wrap)return;
+  if(!filt.length){wrap.innerHTML=`<div class="empty"><div class="ei">🛒</div>No expenses for this period.</div>`;return;}
+  wrap.innerHTML=filt.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="li">
+    <div class="li-l">
+      <div class="li-date">${fd(e.date)}</div>
+      <div style="font-size:13px;color:var(--g500);margin-top:2px">${e.desc}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <span class="pill ${ECOL[e.cat]||''}">${EICO[e.cat]||'📦'} ${e.cat}</span>
+      <span class="ec">${fm(e.amount)}</span>
+      <button class="btn btn-sm bd" onclick="delExp('${e.id}')">✕</button>
+    </div>
+  </div>`).join('');
+}
+function saveExp(){
+  const amt=parseFloat(document.getElementById('exp-a')?.value)||0;
+  const desc=(document.getElementById('exp-n')?.value||'').trim();
+  const date=document.getElementById('exp-d')?.value||todayStr();
+  if(amt<=0){toast('Please enter an amount');return;}
+  if(!desc){toast('Please enter a description');return;}
+  const exp=getExp();exp.unshift({id:uid(),cat:expCat,amount:amt,desc,date});
+  js(K.exp,exp);toast('✅ Expense saved!');
+  document.getElementById('exp-a').value='';document.getElementById('exp-n').value='';
+  renderExpList();
+}
+function delExp(id){js(K.exp,getExp().filter(e=>e.id!==id));toast('Expense removed');renderExpList();}
+function openQIModal(){
+  document.getElementById('qi-name').value=(document.getElementById('exp-n')?.value||'').trim();
+  document.getElementById('qi-cat').value=expCat;
+  document.getElementById('qi-amount').value=parseFloat(document.getElementById('exp-a')?.value)||'';
+  document.getElementById('qimodal').classList.add('open');
+}
+function closeQIModal(){document.getElementById('qimodal').classList.remove('open');}
+function saveQI(){
+  const name=(document.getElementById('qi-name')?.value||'').trim();
+  const cat=document.getElementById('qi-cat')?.value||'Other';
+  const amount=parseFloat(document.getElementById('qi-amount')?.value)||0;
+  if(!name){toast('Please enter a name');return;}
+  const qi=getQI();qi.push({id:uid(),name,cat,amount});
+  js(K.qitems,qi);closeQIModal();toast('⭐ Saved: '+name);
+  const sec=document.getElementById('qi-sec');if(sec)sec.innerHTML=buildQISec();
+}
+function fillQI(id){
+  const qi=getQI(),q=qi.find(x=>x.id===id);if(!q)return;
+  const aEl=document.getElementById('exp-a'),nEl=document.getElementById('exp-n');
+  if(aEl)aEl.value=q.amount;if(nEl)nEl.value=q.name;
+  expCat=q.cat;
+  document.querySelectorAll('.cpill').forEach(p=>{p.classList.toggle('active',p.textContent.includes(q.cat));});
+  toast('Filled in: '+q.name);
+}
+function delQI(id){js(K.qitems,getQI().filter(q=>q.id!==id));const sec=document.getElementById('qi-sec');if(sec)sec.innerHTML=buildQISec();}
+
+// ─────────────────────────────────────────
+// PAYROLL
+// ─────────────────────────────────────────
+let prDate=todayStr();
+function renderPayroll(){
+  sh('Workers & Pay','Mark who worked today and calculate wages');
+  const workers=getWorkers().filter(w=>w.active);
+  const pr=getPR(),dp=pr[prDate]||{};
+  document.getElementById('tbr').innerHTML=`<button class="btn bp" onclick="nav('workers')">Manage Workers</button>`;
+  document.getElementById('pc').innerHTML=`
+    <div class="card">
+      <div class="ch">📅 Choose a Date</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <input type="date" id="pr-date" value="${prDate}" onchange="changePRDate(this.value)" style="max-width:180px">
+        <span style="font-size:13px;color:var(--g400)">Tap Full Day / Half Day / Day Off for each worker</span>
+      </div>
+    </div>
+    ${workers.length===0?`<div class="card"><div class="empty"><div class="ei">👷</div>No active workers yet.<br><button class="btn bp" style="margin-top:12px" onclick="nav('workers')">Add Workers</button></div></div>`:`
+      <div class="card">
+        <div class="ct">Attendance for ${fd(prDate)}</div>
+        <div id="w-list">
+          ${workers.map(w=>{const att=dp[w.id]||'off';const pay=att==='full'?w.wage:att==='half'?w.wage/2:0;return`<div class="wr" id="wr-${w.id}">
+            <div class="wav">${ini(w.name)}</div>
+            <div style="flex:1"><div class="wn">${w.name}</div><div class="ws">${w.role||'Worker'} · ₱${w.wage}/day</div></div>
+            <div class="atbs">
+              <button class="att full ${att==='full'?'on':''}" onclick="setAtt('${w.id}','full')">Full Day</button>
+              <button class="att half ${att==='half'?'on':''}" onclick="setAtt('${w.id}','half')">Half Day</button>
+              <button class="att off  ${att==='off'?'on':''}"  onclick="setAtt('${w.id}','off')">Day Off</button>
+            </div>
+            <div class="wpay" id="wp-${w.id}">${fm(pay)}</div>
+          </div>`;}).join('')}
+        </div>
+        <div style="border-top:1px solid var(--g100);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:14px;font-weight:600;color:var(--g700)">Total wages for this day</span>
+          <span style="font-size:22px;font-weight:700;color:var(--g7)" id="pr-total">${fm(calcDP(workers,dp))}</span>
+        </div>
+      </div>
+      <div class="card"><div class="ct">Last 7 Days — Wage Summary</div>${prSummary(workers)}</div>`}
+  `;
+}
+function changePRDate(d){prDate=d;renderPayroll();}
+function setAtt(wid,att){
+  const pr=getPR();if(!pr[prDate])pr[prDate]={};pr[prDate][wid]=att;js(K.payroll,pr);
+  const workers=getWorkers().filter(w=>w.active),w=workers.find(x=>x.id===wid);if(!w)return;
+  const pay=att==='full'?w.wage:att==='half'?w.wage/2:0;
+  const row=document.getElementById('wr-'+wid);
+  if(row){row.querySelectorAll('.att').forEach(b=>b.classList.remove('on'));row.querySelector('.att.'+att)?.classList.add('on');}
+  const wp=document.getElementById('wp-'+wid);if(wp)wp.textContent=fm(pay);
+  const tot=document.getElementById('pr-total');if(tot)tot.textContent=fm(calcDP(workers,pr[prDate]||{}));
+}
+function calcDP(workers,dp){return workers.filter(w=>w.active).reduce((a,w)=>{const att=dp[w.id]||'off';return a+(att==='full'?w.wage:att==='half'?w.wage/2:0);},0);}
+function prSummary(workers){
+  const pr=getPR(),rows=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const s=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());const dp=pr[s]||{};const tot=calcDP(workers,dp);const atts=workers.filter(w=>w.active&&(dp[w.id]||'off')!=='off').map(w=>`${w.name.split(' ')[0]}: ${dp[w.id]==='full'?'Full':'Half'}`).join(' · ')||'No one recorded';rows.push(`<div class="li"><div class="li-date">${fds(s)}</div><div style="flex:1;font-size:12px;color:var(--g400);padding:0 8px">${atts}</div><div style="font-size:14px;font-weight:600;color:var(--g7)">${fm(tot)}</div></div>`);}
+  return rows.join('');
+}
+
+// ─────────────────────────────────────────
+// REPORTS  — printable / downloadable
+// ─────────────────────────────────────────
+let repMode='week',repCF=todayStr(),repCT=todayStr();
+function renderReports(){
+  sh('Reports','See how your farm is doing — print or download');
+  document.getElementById('tbr').innerHTML=`<button class="btn bp no-print" onclick="printReport()">🖨 Print / Save PDF</button>`;
+  document.getElementById('pc').innerHTML=`
+    <div class="frow2 no-print">
+      <span class="fp ${repMode==='today'?'active':''}"  onclick="setRM('today',this)">Today</span>
+      <span class="fp ${repMode==='week'?'active':''}"   onclick="setRM('week',this)">This Week</span>
+      <span class="fp ${repMode==='month'?'active':''}"  onclick="setRM('month',this)">This Month</span>
+      <span class="fp ${repMode==='custom'?'active':''}" onclick="setRM('custom',this)">Custom Dates</span>
+      <div class="dr" id="rep-cr" style="display:${repMode==='custom'?'flex':'none'}">
+        <input type="date" id="rep-from" value="${repCF}" onchange="repCF=this.value;renderRB()">
+        <span style="font-size:12px;color:var(--g400)">to</span>
+        <input type="date" id="rep-to" value="${repCT}" onchange="repCT=this.value;renderRB()">
+      </div>
+    </div>
+    <div id="rb"></div>`;
+  renderRB();
+}
+function setRM(m,el){repMode=m;document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));el.classList.add('active');const cr=document.getElementById('rep-cr');if(cr)cr.style.display=m==='custom'?'flex':'none';renderRB();}
+function getRepRange(){
+  const today=todayStr();
+  if(repMode==='today')return{from:today,to:today,label:'Today — '+fd(today)};
+  if(repMode==='week'){const d=new Date();d.setDate(d.getDate()-6);return{from:d.toISOString().split('T')[0],to:today,label:'Last 7 Days'};}
+  if(repMode==='month'){const d=new Date();d.setDate(d.getDate()-29);return{from:d.toISOString().split('T')[0],to:today,label:'Last 30 Days'};}
+  const f=document.getElementById('rep-from')?.value||today;
+  const t=document.getElementById('rep-to')?.value||today;
+  return{from:f,to:t,label:fd(f)+' to '+fd(t)};
+}
+function printReport(){window.print();}
+
+function renderRB(){
+  const logs=getLogs(),prices=getPrices(),flock=getFlock();
+  const{from,to,label}=getRepRange();
+  const filt=logs.filter(l=>l.date>=from&&l.date<=to);
+  const exps=getExp().filter(e=>e.date>=from&&e.date<=to);
+  const expTot=exps.reduce((a,e)=>a+e.amount,0);
+  const rb=document.getElementById('rb');
+
+  if(!filt.length){rb.innerHTML=`<div class="card"><div class="empty"><div class="ei">📊</div>No harvest data for this period yet.</div></div>`;return;}
+
+  const tot={small:0,medium:0,large:0,jumbo:0,broken:0};let tE=0,tI=0;
+  filt.forEach(e=>{SIZES.forEach(s=>tot[s]+=(e[s]||0));tot.broken+=(e.broken||0);SIZES.forEach(s=>tI+=(e[s]||0)*(prices[s]||0));});
+  SIZES.forEach(s=>tE+=tot[s]);
+  const avg=filt.length>0?(tE/filt.length).toFixed(1):0;
+  const avgR=flock>0&&filt.length>0?Math.min(100,(tE/filt.length/flock)*100):null;
+  const profit=tI-expTot;
+
+  // bar charts
+  const allDays=[];const cur=new Date(from+'T00:00:00');const endD=new Date(to+'T00:00:00');
+  while(cur<=endD){const s=cur.getFullYear()+'-'+p2(cur.getMonth()+1)+'-'+p2(cur.getDate());const l=logs.find(x=>x.date===s);const c=l?calcE(l):null;allDays.push({s,total:c?c.eggs:0,label:fds(s)});cur.setDate(cur.getDate()+1);}
+  const chartD=allDays.slice(-30);
+  const mxE=Math.max(...chartD.map(d=>d.total),1);
+  const bars=chartD.map(d=>{const h=Math.max(2,Math.round((d.total/mxE)*75));return`<div class="bcc"><div class="bcv">${d.total||''}</div><div class="bcf" style="height:${h}px"></div><div class="bcl">${d.label}</div></div>`;}).join('');
+
+  const eCatD=ECATS.map(c=>({cat:c,tot:exps.filter(e=>e.cat===c).reduce((a,e)=>a+e.amount,0)})).filter(x=>x.tot>0);
+  const mxEx=Math.max(...eCatD.map(x=>x.tot),1);
+  const expBars=eCatD.length>0?eCatD.map(x=>{const h=Math.max(2,Math.round((x.tot/mxEx)*65));return`<div class="bcc"><div class="bcv" style="font-size:9px">${fm(x.tot)}</div><div class="bcf a" style="height:${h}px"></div><div class="bcl">${EICO[x.cat]} ${x.cat}</div></div>`;}).join(''):'';
+
+  const sizeRows=SIZES.filter(s=>tot[s]>0).map(s=>{const pct=tE>0?((tot[s]/tE)*100).toFixed(1):'0.0';return`<tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SC[s]};margin-right:6px"></span>${SL[s]}</td><td>${tot[s]}</td><td>${pct}%</td><td>${fm(prices[s])}</td><td class="ic">${fm(tot[s]*(prices[s]||0))}</td></tr>`;}).join('');
+
+  // per-day table
+  const perDayRows=flock>0?filt.map(e=>{const eg=SIZES.reduce((a,s)=>a+(e[s]||0),0);const r=Math.min(100,(eg/flock)*100);const cls=rateClass(r);return`<tr><td>${fd(e.date)}</td><td>${eg}</td><td style="font-weight:600;color:${cls==='good'?'var(--g7)':cls==='ok'?'var(--amd)':'var(--re)'}">${r.toFixed(1)}% <small style="font-weight:400;color:var(--g400)">(${eg} of ${flock})</small></td></tr>`;}).join(''):filt.map(e=>{const eg=SIZES.reduce((a,s)=>a+(e[s]||0),0);return`<tr><td>${fd(e.date)}</td><td>${eg}</td><td style="color:var(--g400)">Set chicken count to see %</td></tr>`;}).join('');
+
+  rb.innerHTML=`
+    <!-- print header (hidden on screen) -->
+    <div class="print-header">
+      <h1>Bal Farm — ${label}</h1>
+      <p>Printed on ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+    </div>
+
+    <!-- summary numbers -->
+    <div class="card">
+      <div class="ct">Summary — ${label}</div>
+      <div class="mr">
+        <div class="mc"><div class="mcl">🥚 Total Eggs</div><div class="mcv g">${tE}</div><div class="mcs">from ${filt.length} day(s)</div></div>
+        <div class="mc"><div class="mcl">💰 Egg Income</div><div class="mcv g">${fm(tI)}</div></div>
+        <div class="mc"><div class="mcl">🛒 Total Spent</div><div class="mcv a">${fm(expTot)}</div></div>
+        <div class="mc"><div class="mcl">📈 Money Earned</div><div class="mcv ${profit>=0?'g':'r'}">${fm(profit)}</div><div class="mcs">${profit>=0?'after expenses':'loss'}</div></div>
+        <div class="mc"><div class="mcl">📊 Avg Eggs/Day</div><div class="mcv">${avg}</div></div>
+        ${avgR!==null?`<div class="mc"><div class="mcl">🐔 Avg Laying</div><div class="mcv ${rateClass(avgR)==='good'?'g':rateClass(avgR)==='ok'?'a':'r'}">${avgR.toFixed(1)}%</div><div class="mcs">of ${flock} chickens</div></div>`:''}
+      </div>
+    </div>
+
+    <!-- laying rate -->
+    ${avgR!==null?`<div class="card">
+      <div class="ct">Laying Rate</div>
+      ${layingBlock(Math.round(avgR/100*flock),flock)}
+    </div>`:''}
+
+    <!-- egg count chart -->
+    <div class="card">
+      <div class="ct">Daily Egg Count</div>
+      <div class="bc" style="height:85px;margin-top:.5rem">${bars}</div>
+    </div>
+
+    ${expBars?`<div class="card"><div class="ct">What You Spent Money On</div><div class="bc" style="height:72px;margin-top:.5rem">${expBars}</div></div>`:''}
+
+    <!-- per-day table -->
+    <div class="card">
+      <div class="ct">Day-by-Day Record</div>
+      <table class="dt"><thead><tr><th>Date</th><th>Eggs Collected</th><th>Chickens That Laid</th></tr></thead><tbody>${perDayRows}</tbody></table>
+    </div>
+
+    <!-- income breakdown -->
+    <div class="card">
+      <div class="ct">Income from Each Egg Size</div>
+      <table class="dt"><thead><tr><th>Size</th><th>Count</th><th>Share</th><th>Price</th><th>Income</th></tr></thead><tbody>
+        ${sizeRows}
+        ${tot.broken>0?`<tr><td>🩹 Broken</td><td>${tot.broken}</td><td>—</td><td>—</td><td style="color:var(--g400)">₱0.00</td></tr>`:''}
+        <tr class="tr-tot"><td>TOTAL</td><td>${tE+tot.broken}</td><td>100%</td><td></td><td class="ic">${fm(tI)}</td></tr>
+      </tbody></table>
+    </div>
+
+    <!-- expenses list -->
+    ${exps.length>0?`<div class="card">
+      <div class="ct">Expenses List</div>
+      <table class="dt"><thead><tr><th>Date</th><th>What</th><th>Category</th><th>Amount</th></tr></thead><tbody>
+        ${exps.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<tr><td>${fds(e.date)}</td><td>${e.desc}</td><td>${EICO[e.cat]} ${e.cat}</td><td class="ec">${fm(e.amount)}</td></tr>`).join('')}
+        <tr class="tr-tot"><td>TOTAL</td><td colspan="2"></td><td class="ec">${fm(expTot)}</td></tr>
+      </tbody></table>
+    </div>`:''}
+  `;
+}
+
+// ─────────────────────────────────────────
+// MY CHICKENS
+// ─────────────────────────────────────────
+function renderChickens(){
+  sh('My Chickens','How many chickens do you have?');
+  const flock=getFlock();
+  document.getElementById('pc').innerHTML=`
+    <div class="card">
+      <div class="ch">🐔 How many chickens do you have?</div>
+      <div class="cd">Enter the total number of your chickens here. The app will use this number to tell you how many chickens laid eggs each day.<br><br>
+        <strong>Example:</strong> You have <strong>100 chickens</strong>. Today you collected <strong>75 eggs</strong>. That means <strong>75 out of 100 chickens</strong> laid an egg today. That is <strong>75%</strong>.</div>
+      <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:.75rem">
+        <div style="flex:1;min-width:150px"><label>Total Number of Chickens</label>
+          <input type="number" id="fc" min="0" value="${flock}" style="font-size:28px;font-weight:700;text-align:center;padding:14px" oninput="updateCS()">
+        </div>
+        <button class="btn bp btn-lg" onclick="saveChickens()">✅ Save</button>
+      </div>
+    </div>
+    <div class="card"><div class="ct">How Your Chickens Are Doing</div><div id="cs"></div></div>
+  `;
+  updateCS();
+}
+function updateCS(){
+  const f=parseInt(document.getElementById('fc')?.value)||0;
+  const el=document.getElementById('cs');if(!el)return;
+  if(f===0){el.innerHTML=`<p style="font-size:13px;color:var(--g400)">Enter your chicken count above to see stats.</p>`;return;}
+  const logs=getLogs(),today=todayStr(),tl=logs.find(l=>l.date===today);
+  const tE=tl?SIZES.reduce((a,s)=>a+(tl[s]||0),0):0;
+  const d7=new Date();d7.setDate(d7.getDate()-6);
+  const week=logs.filter(l=>l.date>=d7.toISOString().split('T')[0]&&l.date<=today);
+  const wE=week.reduce((a,e)=>a+SIZES.reduce((b,s)=>b+(e[s]||0),0),0);
+  const wr=week.length>0?Math.min(100,(wE/week.length/f)*100):0;
+  el.innerHTML=`
+    <div class="mr">
+      <div class="mc"><div class="mcl">Today</div><div class="mcv ${tE>0?rateClass(Math.min(100,(tE/f)*100))==='good'?'g':rateClass(Math.min(100,(tE/f)*100))==='ok'?'a':'r':''}">${tE>0?Math.min(100,(tE/f)*100).toFixed(1)+'%':'—'}</div><div class="mcs">${tE} out of ${f} chickens</div></div>
+      <div class="mc"><div class="mcl">7-Day Average</div><div class="mcv ${rateClass(wr)==='good'?'g':rateClass(wr)==='ok'?'a':'r'}">${wr.toFixed(1)}%</div><div class="mcs">from ${week.length} days recorded</div></div>
+    </div>
+    ${tE>0?layingBlock(tE,f):'<p style="font-size:13px;color:var(--g400)">No eggs logged today yet.</p>'}`;
+}
+function saveChickens(){const v=parseInt(document.getElementById('fc')?.value)||0;localStorage.setItem(K.flock,v);toast('✅ Saved: '+v+' chickens');updateCS();}
+
+// ─────────────────────────────────────────
+// MANAGE WORKERS
+// ─────────────────────────────────────────
+function renderWorkers(){
+  sh('Manage Workers','Add, edit, or remove farm workers');
+  document.getElementById('tbr').innerHTML=`<button class="btn bp" onclick="openWModal()">+ Add Worker</button>`;
+  const workers=getWorkers();
+  document.getElementById('pc').innerHTML=`
+    <div class="card">
+      <div class="ch">👥 Your Farm Workers</div>
+      <div class="cd">These are the people who work on your farm. Set their daily wage here. Mark attendance in "Workers &amp; Pay".</div>
+      ${workers.length===0?`<div class="empty"><div class="ei">👷</div>No workers added yet. Tap "+ Add Worker" above.</div>`:''}
+      ${workers.map(w=>`<div class="wr">
+        <div class="wav" style="background:${w.active?'var(--g1)':'var(--g100)'};color:${w.active?'var(--g8)':'var(--g400)'}">${ini(w.name)}</div>
+        <div style="flex:1"><div class="wn" style="color:${w.active?'var(--g700)':'var(--g400)'}">${w.name}</div><div class="ws">${w.role||'Worker'} · ₱${w.wage}/day · ${w.active?'<span style="color:var(--g7);font-weight:600">Active</span>':'<span style="color:var(--g400)">Inactive</span>'}</div></div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-sm" onclick="toggleW('${w.id}')">${w.active?'Deactivate':'Activate'}</button>
+          <button class="btn btn-sm bd" onclick="delW('${w.id}')">Remove</button>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="info g">💡 "Deactivate" hides a worker from the daily list without deleting their records. Use "Remove" only to permanently delete.</div>
+  `;
+}
+function openWModal(){document.getElementById('wmodal').classList.add('open');}
+function closeWModal(){document.getElementById('wmodal').classList.remove('open');}
+function saveNewWorker(){
+  const name=(document.getElementById('mw-name')?.value||'').trim();
+  const wage=parseFloat(document.getElementById('mw-wage')?.value)||0;
+  const role=(document.getElementById('mw-role')?.value||'').trim();
+  if(!name){toast('Please enter the worker\'s name');return;}
+  const workers=getWorkers();workers.push({id:uid(),name,wage,role,active:true});
+  js(K.workers,workers);closeWModal();
+  document.getElementById('mw-name').value='';document.getElementById('mw-role').value='';document.getElementById('mw-wage').value='500';
+  toast('✅ Worker added: '+name);renderWorkers();
+}
+function toggleW(id){const workers=getWorkers(),w=workers.find(x=>x.id===id);if(!w)return;w.active=!w.active;js(K.workers,workers);toast(w.name+' is now '+(w.active?'active':'inactive'));renderWorkers();}
+function delW(id){if(!confirm('Remove this worker? This cannot be undone.'))return;js(K.workers,getWorkers().filter(w=>w.id!==id));toast('Worker removed');renderWorkers();}
+
+// ── Init ────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('tbs').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  renderDash();
+});
+</script>
+</body>
+</html>
